@@ -2,5 +2,5 @@
 
 @section('content')
         <h1>{{$title}}</h1>
-        <p>This is a running blog</p>
+        <p>Runner education, training, motivation, stretches, gear and many more</p>
 @endsection
