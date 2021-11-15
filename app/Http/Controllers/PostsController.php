@@ -8,6 +8,18 @@ use DB;
 
 class PostsController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except'=>['index', 'show']]); //moze da vidi Blog stranu gde su svi postovi al ne moze da ih edituje
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -75,6 +87,9 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        if(auth()->user()->id !== $post->user_id){ //ako nije vlasnik posta
+            return redirect('/posts')->with('error', 'Unauthorized page!');
+        }
         return view('posts.edit')->with('post', $post);
     }
 
@@ -109,6 +124,11 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+
+        if(auth()->user()->id !== $post->user_id){ //ako nije vlasnik posta
+            return redirect('/posts')->with('error', 'Unauthorized page!');
+        }
+
         $post->delete();
         return redirect('/posts')->with('success', 'Post removed!');
     }
